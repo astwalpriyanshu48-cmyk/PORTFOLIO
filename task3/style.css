@@ -1,0 +1,548 @@
+/* =============================================================
+   SCIENTIFIC CALCULATOR – style.css
+   Theme  : Premium Dark Glassmorphism + Cyberpunk Neon Accents
+   Palette: #0a0a14 bg | #141426 card | #8b5cf6 purple | #06b6d4 cyan
+   ============================================================= */
+
+/* ── Reset & Base ─────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Color Palette */
+  --clr-bg:           #090912;
+  --clr-card-bg:      rgba(19, 20, 36, 0.78);
+  --clr-glass-edge:   rgba(255, 255, 255, 0.08);
+  --clr-glass-inner:  rgba(255, 255, 255, 0.04);
+
+  /* Scientific Function Buttons (Cyan / Aqua tint) */
+  --clr-sci:          rgba(6, 182, 212, 0.12);
+  --clr-sci-hover:    rgba(6, 182, 212, 0.22);
+  --clr-sci-active:   rgba(6, 182, 212, 0.32);
+  --clr-sci-text:     #67e8f9;
+  --clr-sci-border:   rgba(6, 182, 212, 0.22);
+
+  /* Constants (π, e) Highlight (Emerald tint) */
+  --clr-const-text:   #34d399;
+  --clr-const-bg:     rgba(52, 211, 153, 0.12);
+
+  /* Standard Number Buttons (Frosted White) */
+  --clr-num:          rgba(255, 255, 255, 0.05);
+  --clr-num-hover:    rgba(255, 255, 255, 0.11);
+  --clr-num-active:   rgba(255, 255, 255, 0.18);
+  --clr-num-text:     #f8fafc;
+
+  /* Basic Operator Buttons (+ - × ÷) (Violet tint) */
+  --clr-op:           rgba(139, 92, 246, 0.18);
+  --clr-op-hover:     rgba(139, 92, 246, 0.32);
+  --clr-op-active:    rgba(139, 92, 246, 0.46);
+  --clr-op-text:      #c4b5fd;
+  --clr-op-border:    rgba(139, 92, 246, 0.28);
+
+  /* Action Buttons (AC, DEL) (Crimson/Rose tint) */
+  --clr-fn:           rgba(244, 63, 94, 0.14);
+  --clr-fn-hover:     rgba(244, 63, 94, 0.26);
+  --clr-fn-active:    rgba(244, 63, 94, 0.38);
+  --clr-fn-text:      #fda4af;
+  --clr-fn-border:    rgba(244, 63, 94, 0.25);
+
+  /* Equals Button (Vibrant Indigo-to-Violet Gradient) */
+  --clr-eq-from:      #8b5cf6;
+  --clr-eq-to:        #6366f1;
+  --clr-eq-shadow:    rgba(139, 92, 246, 0.6);
+
+  /* Display & Text */
+  --clr-display-bg:   rgba(10, 10, 20, 0.72);
+  --clr-text-main:    #ffffff;
+  --clr-text-muted:   #94a3b8;
+  --clr-expr:         #a5b4fc;
+  --clr-deg-pill:     #38bdf8;
+
+  /* Geometry & Typography */
+  --radius-card:      26px;
+  --radius-btn:       13px;
+  --gap:              9px;
+  --font-main:        'Outfit', system-ui, -apple-system, sans-serif;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--clr-bg);
+  color: var(--clr-text-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  padding: 20px 10px;
+}
+
+/* ── Animated Background Glow Blobs ───────────────────────── */
+.app-bg {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100vw;
+  z-index: 1;
+}
+
+.blob {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.38;
+  animation: floatBlobs 16s ease-in-out infinite alternate;
+}
+
+.blob-1 {
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, #7c3aed, #4338ca);
+  top: -140px;
+  left: -120px;
+}
+
+.blob-2 {
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, #06b6d4, #2563eb);
+  bottom: -120px;
+  right: -100px;
+  animation-delay: -7s;
+}
+
+.blob-3 {
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, #ec4899, #8b5cf6);
+  top: 45%;
+  left: 60%;
+  opacity: 0.18;
+  animation-delay: -12s;
+}
+
+@keyframes floatBlobs {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(35px, -25px) scale(1.06); }
+  100% { transform: translate(-30px, 35px) scale(0.95); }
+}
+
+/* ── Calculator Container Card ───────────────────────────── */
+.calculator {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 760px;
+  background: var(--clr-card-bg);
+  border: 1px solid var(--clr-glass-edge);
+  border-radius: var(--radius-card);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  box-shadow:
+    0 0 0 1px var(--clr-glass-inner) inset,
+    0 32px 70px -12px rgba(0, 0, 0, 0.75),
+    0 12px 30px rgba(0, 0, 0, 0.4);
+  padding: 22px 24px 24px;
+  animation: cardEntrance 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ── Display Panel ───────────────────────────────────────── */
+.display {
+  background: var(--clr-display-bg);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 18px;
+  padding: 16px 20px 14px;
+  margin-bottom: 18px;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.55);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+}
+
+/* Top bar: branding + mode indicators */
+.display__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  padding-bottom: 8px;
+  margin-bottom: 4px;
+}
+
+.display__label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--clr-text-muted);
+  text-transform: uppercase;
+}
+
+/* DEG / RAD toggle button */
+.deg-rad-pill {
+  background: rgba(6, 182, 212, 0.15);
+  border: 1px solid rgba(6, 182, 212, 0.35);
+  border-radius: 20px;
+  color: var(--clr-deg-pill);
+  font-family: var(--font-main);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 3px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  outline: none;
+}
+
+.deg-rad-pill:hover {
+  background: rgba(6, 182, 212, 0.28);
+  border-color: rgba(6, 182, 212, 0.6);
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.35);
+}
+
+.deg-rad-pill:active {
+  transform: scale(0.94);
+}
+
+/* Expression line: scrollable full formula */
+.display__expression {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--clr-expr);
+  min-height: 1.4em;
+  letter-spacing: 0.03em;
+  text-align: right;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  transition: color 0.2s ease;
+}
+
+.display__expression::-webkit-scrollbar {
+  display: none;
+}
+
+/* Main number line */
+.display__main {
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-weight: 600;
+  color: var(--clr-text-main);
+  letter-spacing: -0.02em;
+  text-align: right;
+  line-height: 1.1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  transition: transform 0.1s ease, color 0.2s ease;
+}
+
+.display__main::-webkit-scrollbar {
+  display: none;
+}
+
+.display__main.pop {
+  animation: popNum 0.12s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popNum {
+  0%   { transform: scale(0.94); }
+  100% { transform: scale(1); }
+}
+
+.display__main.error {
+  color: #fb7185;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+}
+
+/* ── 8-Column Keypad Grid ────────────────────────────────── */
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: var(--gap);
+}
+
+/* ── Base Button Styles ─────────────────────────────────── */
+.btn {
+  font-family: var(--font-main);
+  font-size: 1.05rem;
+  font-weight: 500;
+  height: 54px;
+  border-radius: var(--radius-btn);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 0.16s ease,
+    border-color 0.16s ease,
+    transform 0.1s ease,
+    box-shadow 0.16s ease,
+    color 0.16s ease;
+}
+
+/* Subtle gloss shine overlay */
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, transparent 100%);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Ripple click effect */
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.22) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.btn:hover::after  { opacity: 1; }
+.btn:active::after { opacity: 0.5; }
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(1px) scale(0.94);
+}
+
+.btn.pressed {
+  transform: translateY(1px) scale(0.92);
+  box-shadow: none !important;
+}
+
+/* ── Category Styles ─────────────────────────────────────── */
+
+/* 1. Scientific Functions */
+.btn--sci {
+  background: var(--clr-sci);
+  color: var(--clr-sci-text);
+  border-color: var(--clr-sci-border);
+  font-size: 0.95rem;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.btn--sci:hover {
+  background: var(--clr-sci-hover);
+  color: #a5f3fc;
+  box-shadow: 0 6px 16px rgba(6, 182, 212, 0.22);
+}
+
+.btn--sci:active {
+  background: var(--clr-sci-active);
+}
+
+/* Constants (π, e) */
+.btn--const {
+  color: var(--clr-const-text);
+  background: var(--clr-const-bg);
+  border-color: rgba(52, 211, 153, 0.25);
+}
+
+.btn--const:hover {
+  color: #6ee7b7;
+  box-shadow: 0 6px 16px rgba(52, 211, 153, 0.25);
+}
+
+/* 2. Standard Numbers */
+.btn--num {
+  background: var(--clr-num);
+  color: var(--clr-num-text);
+  font-size: 1.22rem;
+  font-weight: 600;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    0 1px 0 rgba(255, 255, 255, 0.05) inset;
+}
+
+.btn--num:hover {
+  background: var(--clr-num-hover);
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.35),
+    0 1px 0 rgba(255, 255, 255, 0.08) inset;
+}
+
+.btn--num:active {
+  background: var(--clr-num-active);
+}
+
+/* 3. Basic Operators (+ - × ÷ %) */
+.btn--op {
+  background: var(--clr-op);
+  color: var(--clr-op-text);
+  border-color: var(--clr-op-border);
+  font-size: 1.3rem;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(139, 92, 246, 0.18);
+}
+
+.btn--op:hover {
+  background: var(--clr-op-hover);
+  color: #ddd6fe;
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.35);
+}
+
+.btn--op:active {
+  background: var(--clr-op-active);
+}
+
+/* 4. Action Controls (AC, DEL) */
+.btn--fn {
+  background: var(--clr-fn);
+  color: var(--clr-fn-text);
+  border-color: var(--clr-fn-border);
+  font-weight: 700;
+  font-size: 1.05rem;
+  box-shadow: 0 4px 14px rgba(244, 63, 94, 0.15);
+}
+
+.btn--fn:hover {
+  background: var(--clr-fn-hover);
+  color: #ffe4e6;
+  box-shadow: 0 6px 20px rgba(244, 63, 94, 0.3);
+}
+
+.btn--fn:active {
+  background: var(--clr-fn-active);
+}
+
+/* 5. Equals Accent Button */
+.btn--eq {
+  background: linear-gradient(135deg, var(--clr-eq-from), var(--clr-eq-to));
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.45rem;
+  border: none;
+  box-shadow:
+    0 6px 22px var(--clr-eq-shadow),
+    0 2px 0 rgba(255, 255, 255, 0.22) inset;
+}
+
+.btn--eq:hover {
+  background: linear-gradient(135deg, #9d6fff, #706bf9);
+  box-shadow:
+    0 8px 28px rgba(139, 92, 246, 0.75),
+    0 2px 0 rgba(255, 255, 255, 0.28) inset;
+}
+
+.btn--eq:active {
+  box-shadow: 0 3px 12px rgba(139, 92, 246, 0.5);
+}
+
+/* ── Responsive Design ───────────────────────────────────── */
+@media (max-width: 720px) {
+  .calculator {
+    padding: 18px 16px 20px;
+    border-radius: 20px;
+    max-width: 100%;
+  }
+
+  .keypad {
+    gap: 7px;
+  }
+
+  .btn {
+    height: 48px;
+    font-size: 0.95rem;
+    border-radius: 10px;
+  }
+
+  .btn--num {
+    font-size: 1.1rem;
+  }
+
+  .btn--op, .btn--eq {
+    font-size: 1.2rem;
+  }
+
+  .display {
+    padding: 14px 16px 12px;
+  }
+}
+
+@media (max-width: 520px) {
+  body {
+    padding: 8px 4px;
+  }
+
+  .calculator {
+    padding: 14px 10px 16px;
+    border-radius: 18px;
+  }
+
+  .keypad {
+    gap: 5px;
+  }
+
+  .btn {
+    height: 44px;
+    font-size: 0.82rem;
+    border-radius: 8px;
+  }
+
+  .btn--num {
+    font-size: 0.98rem;
+  }
+
+  .btn--op, .btn--eq {
+    font-size: 1.05rem;
+  }
+
+  .display {
+    padding: 12px 14px 10px;
+    margin-bottom: 12px;
+  }
+
+  .display__main {
+    font-size: 1.8rem;
+  }
+}
